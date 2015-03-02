@@ -1,0 +1,6 @@
+---
+
+gitbucket_home: /opt/gitbucket
+gitbucket_data: /var/gitbucket
+sysconfig_dir: /etc/sysconfig
+initd_dir: /etc/init.d

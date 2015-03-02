@@ -1,0 +1,10 @@
+---
+
+- name: install httpd (apache2)
+  yum: name=httpd state=latest
+
+- name: add proxy conf
+  copy: src=proxy.conf dest=/etc/httpd/conf.d
+
+- name: enable and start service httpd
+  service: name=httpd state=started enabled=yes

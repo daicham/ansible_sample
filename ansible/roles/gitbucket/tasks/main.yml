@@ -1,0 +1,45 @@
+---
+
+- name: create group for gitbucket
+  group: name=gitbucket
+
+- name: create user for gitbucket
+  user: name=gitbucket groups=gitbucket shell=/bin/nologin
+
+- name: create directory gitbucket uses
+  file: path={{ item }} state=directory owner=gitbucket group=gitbucket mode=0755
+  with_items:
+    - "{{ gitbucket_home }}/bin"
+    - "{{ gitbucket_home }}/logs"
+    - "{{ gitbucket_home }}/lib"
+    - "{{ gitbucket_data }}"
+
+- name: install wget
+  yum: name=wget state=latest
+
+- name: download latest GitBucket
+  shell: curl -s -L https://github.com/takezoe/gitbucket/releases/latest|grep gitbucket.war|grep href|awk 'BEGIN{FS="\""}{print$2}'|wget --base=https://github.com/ -i -
+  args:
+    chdir: "{{ gitbucket_home }}/lib"
+    creates: "gitbucket.war"
+
+- name: change mode and owner/group of the war file
+  file: path={{ gitbucket_home }}/lib/gitbucket.war state=touch mode=0644 owner=gitbucket group=gitbucket
+
+- name: download bootstrap script for gitbucket
+  get_url: url=https://github.com/takezoe/gitbucket/raw/master/contrib/linux/redhat/gitbucket.init dest={{ gitbucket_home }}/bin/gitbucket
+
+- name: change mode and owner/group of the bootstrap script
+  file: path={{ gitbucket_home }}/bin/gitbucket state=touch mode=0744 owner=gitbucket group=gitbucket
+
+- name: create symblic link to the bootstrap script
+  file: path={{ initd_dir }}/gitbucket src={{ gitbucket_home }}/bin/gitbucket state=link
+
+- name: copy gitbucket.conf to remote
+  copy: src=gitbucket.conf dest={{ gitbucket_home }} mode=0644 owner=gitbucket group=gitbucket
+
+- name: crete symbolic link to gitbucket.conf
+  file: path={{ sysconfig_dir }}/gitbucket src={{ gitbucket_home }}/gitbucket.conf state=link
+
+- name: enable and start service gitbucket
+  service: name=gitbucket state=started enabled=yes
