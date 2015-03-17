@@ -17,6 +17,9 @@
 - name: install wget
   yum: name=wget state=latest
 
+- name: install libselinux-python (this is needed if target uses libselinux-python)
+  yum: name=libselinux-python state=latest
+
 - name: download latest GitBucket
   shell: curl -s -L https://github.com/takezoe/gitbucket/releases/latest|grep gitbucket.war|grep href|awk 'BEGIN{FS="\""}{print$2}'|wget --base=https://github.com/ -i -
   args:
@@ -27,7 +30,7 @@
   file: path={{ gitbucket_home }}/lib/gitbucket.war state=touch mode=0644 owner=gitbucket group=gitbucket
 
 - name: download bootstrap script for gitbucket
-  get_url: url=https://github.com/takezoe/gitbucket/raw/master/contrib/linux/redhat/gitbucket.init dest={{ gitbucket_home }}/bin/gitbucket
+  get_url: url=http://github.com/takezoe/gitbucket/raw/master/contrib/linux/redhat/gitbucket.init dest={{ gitbucket_home }}/bin/gitbucket
 
 - name: change mode and owner/group of the bootstrap script
   file: path={{ gitbucket_home }}/bin/gitbucket state=touch mode=0744 owner=gitbucket group=gitbucket

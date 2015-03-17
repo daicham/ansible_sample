@@ -23,6 +23,9 @@ yum update -y
 #
 yum install ansible -y --enablerepo=epel
 
+# Install libselinux-python (if target uses selinux)
+yum install -y libselinux-python
+
 # Copy SSH config for connecting target VM
 mkdir -p /vagrant/.ssh
 cp /vagrant/ssh_config /home/vagrant/.ssh/config
