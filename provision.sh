@@ -26,6 +26,15 @@ yum install ansible -y --enablerepo=epel
 # Copy SSH config for connecting target VM
 mkdir -p /vagrant/.ssh
 cp /vagrant/ssh_config /home/vagrant/.ssh/config
+chown vagrant:vagrant /home/vagrant/.ssh/config
+chmod 600 /home/vagrant/.ssh/config
+
+# Copy private key to connect dev via ssh
+cp /vagrant/.vagrant/machines/dev/virtualbox/private_key /home/vagrant/.ssh/private_key_dev
+chown vagrant:vagrant /home/vagrant/.ssh/private_key_dev
+chmod 600 /home/vagrant/.ssh/private_key_dev
 
 # Copy ansible playbook and so on
 cp -r /vagrant/ansible /home/vagrant/
+chown -R vagrant:vagrant /vagrant/ansible
+chmod -x /vagrant/ansible/hosts

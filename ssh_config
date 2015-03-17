@@ -5,6 +5,6 @@ Host 192.168.33.101
   UserKnownHostsFile /dev/null
   StrictHostKeyChecking no
   PasswordAuthentication no
-  IdentityFile /vagrant/.vagrant/machines/dev/virtualbox/private_key
+  IdentityFile ~/.ssh/private_key_dev
   IdentitiesOnly yes
   LogLevel FATAL
