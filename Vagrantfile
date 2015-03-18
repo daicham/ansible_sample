@@ -16,11 +16,11 @@ Vagrant.configure(2) do |config|
 
   config.vm.provision :shell, :path => "provision_proxy.sh", :args => [ENV["http_proxy"], ENV["https_proxy"]] if ENV["http_proxy"] != nil
 
+  config.vm.define "dev" do |dev|
+    dev.vm.network "private_network", ip: "192.168.33.101"
+  end
   config.vm.define "control" do |control|
     control.vm.network "private_network", ip: "192.168.33.100"
     control.vm.provision :shell, :path => "provision.sh"
-  end
-  config.vm.define "dev" do |dev|
-    dev.vm.network "private_network", ip: "192.168.33.101"
   end
 end
